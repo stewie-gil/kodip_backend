@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('./controller/authController')
 const verifyToken = require('./verify');
+const propertyController = require('./controller/propertyController')
 
 //register a new user
 router.post('/register', authController.register);
@@ -12,9 +13,11 @@ router.post('/login', authController.login);
 // post property info
 router.post('/post', verifyToken, authController.post);
 
-//properties
-//router.post('/properties', verifyToken, auth.controller.properties)
+//post a new property
+router.post('/properties', verifyToken, propertyController.post)
 
+//Get all properties
+router.get('/properties', propertyController.get);
 //messages
 //router.post('/message', verifyToken, authController.message)
 

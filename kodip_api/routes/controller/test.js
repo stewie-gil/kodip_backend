@@ -6,7 +6,7 @@ password: 'your_passsowrd',
 
 };
 
-/*
+
 const reigsterdata = {
     username: 'some_user',
     email: 'john_doe@example.com',
@@ -24,12 +24,12 @@ console.log(response.data)
     console.error('login fail:', error)
 })
 
-*/
+
 //axios.post('http://localhost:3000/api/auth/login', loginData)
 
 
 // Define the API URL and the JWT token
-
+/*
 const apiUrl = 'http://localhost:3000/api/auth/post'; // Replace with your actual URL
 const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUyYTNhMDBhYTE0ZmRiZDk5NWVjYjZmIiwiZW1haWwiOiJqb2huX2RvZUBleGFtcGxlLmNvbSJ9LCJpYXQiOjE2OTcyNjk0NDQsImV4cCI6MTY5NzI3MzA0NH0.AYkcw36MxlfU-ahSlL-IX89aKy3yuTih43O0l_zmtQU';
 // Create a POST request with the JWT token
@@ -45,3 +45,4 @@ axios
   .catch((error) => {
     console.error('Error:', error);
   });
+*/
