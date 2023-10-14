@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 
 
 //uri
-const uri = "mongodb+srv://stewie-gil:@cluster0.ez5jfzu.mongodb.net/?retryWrites=true&w=majority"
+const uri = "mongodb+srv://stewie-gil:777Stephen!@cluster0.ez5jfzu.mongodb.net/?retryWrites=true&w=majority"
 
 
 //connect to mongodb
@@ -22,8 +22,6 @@ const connectDB = async () => {
       process.exit(1);
     }
   };
-
-
 
 
 
