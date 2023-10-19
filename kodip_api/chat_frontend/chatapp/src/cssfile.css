@@ -1,0 +1,104 @@
+
+.parent-container {
+    display: flex;
+    height: 100%; 
+    border : 2px solid rgba(135, 206, 235, 0.5);
+
+    
+  }
+.chat-container {
+  
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+   
+    height: 600px;
+    
+  }
+  
+  .chat-messages {
+    flex: 1;
+    overflow-y: scroll;
+  }
+  
+  .message {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+  }
+  
+  .active-contact {
+    background-color: #007bff; /* Change to the desired active color */
+    color: #fff; /* Change text color for active contact */
+  }
+
+.contacts {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 20%;
+    min-width: 200px;
+    
+    display: flex;
+    height :600px;
+
+  }
+
+  #contact-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    eight: 550px;
+  }
+  
+  #contact-list li {
+    margin-bottom: 10px;
+  }
+  
+  /* Style the contact names */
+  h2 {
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Style on hover (optional) */
+  h2:hover {
+    text-decoration: underline;
+  }
+
+
+
+
+
+  .chat-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

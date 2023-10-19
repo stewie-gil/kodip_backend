@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.io Direct Messaging</title>
+</head>
+<body>
+  <h1>Direct Messaging</h1>
+
+  <!-- Input for setting the username -->
+  <input id="usernameInput" placeholder="Enter your username" />
+  <button id="setUsernameButton">Set Username</button>
+
+  <!-- User list to select a recipient -->
+  <h2>User List</h2>
+  <ul id="userList"></ul>
+
+  <!-- Chat area for displaying messages -->
+  <h2>Chat</h2>
+  <ul id="chatMessages"></ul>
+
+  <!-- Recipient select to choose a recipient -->
+  <h2>Recipient</h2>
+  <select id="recipientSelect"></select>
+
+  <!-- Input for composing and sending messages -->
+  <input id="messageInput" placeholder="Type a message" />
+  <button id="sendMessageButton" disabled>Send</button>
+
+  <!-- Socket.IO client library -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Create a Socket.IO client instance
+    const socket = io();
+
+    // Store the user's username
+    let userName = '';
+
+    // References to HTML elements
+    const usernameInput = document.getElementById('usernameInput');
+    const setUsernameButton = document.getElementById('setUsernameButton');
+    const userList = document.getElementById('userList');
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const sendMessageButton = document.getElementById('sendMessageButton');
+    const recipientSelect = document.getElementById('recipientSelect');
+
+    // Function to display messages in the chat area
+    function displayMessage(message) {
+      const listItem = document.createElement('li');
+      listItem.textContent = message;
+      chatMessages.appendChild(listItem);
+    }
+
+    // Handle the "Set Username" button click
+    setUsernameButton.addEventListener('click', () => {
+      const newUserName = usernameInput.value.trim();
+
+      if (newUserName) {
+        userName = newUserName;
+
+        // Disable the username input and button
+        usernameInput.disabled = true;
+        setUsernameButton.disabled = true;
+
+        // Enable the message input and send button
+        messageInput.disabled = false;
+        sendMessageButton.disabled = false;
+
+        // Emit the "set username" event to the server
+        socket.emit('set username', userName);
+      }
+    });
+
+    // Handle the "Send" button click
+    sendMessageButton.addEventListener('click', () => {
+      const message = messageInput.value.trim();
+      const recipient = recipientSelect.value; // Get the selected recipient's username
+
+      if (message && recipient) {
+        // Emit the "chat message" event to the server with message and recipient
+        socket.emit('chat message', message, recipient);
+        
+        // Display the sent message in the chat area
+        displayMessage(`You to ${recipient}: ${message}`);
+
+        // Clear the message input
+        messageInput.value = '';
+      }
+    });
+
+    // Handle incoming messages from the server
+    socket.on('chat message', (message) => {
+      // Display the received message in the chat area
+      displayMessage(message);
+    });
+
+    // Update the user list and recipient select when the server sends the list of users
+    socket.on('user list', (users) => {
+      // Clear the current user list and recipient select
+      userList.innerHTML = '';
+      recipientSelect.innerHTML = '';
+
+      // Populate the user list and recipient select with available users
+      users.forEach((user) => {
+        const userOption = document.createElement('option');
+        userOption.value = user;
+        userOption.textContent = user;
+        recipientSelect.appendChild(userOption);
+
+        const listItem = document.createElement('li');
+        listItem.textContent = user;
+        userList.appendChild(listItem);
+      });
+    });
+  </script>
+</body>
+</html>
