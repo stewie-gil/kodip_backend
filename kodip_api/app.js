@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
     io.emit('online users', users.map((user) => user.username));
   });
   
-  let i = 0;
+  
   socket.on('private message', ({ to, message, from }) => {
     const recipientUser = users.find((user) => user.username === to);
     const senderUser = users.find((user) => user.username === from);
@@ -58,8 +58,7 @@ io.on('connection', (socket) => {
       recipientSocket.emit('A private message', { from, message }); // Send the message to the recipient
       console.log('Sending a private message:', from, 'to', to, message);
       
-      i += 1;
-      console.log('times', i);
+
     } else {
       console.log(`Recipient user '${to}' not found.`);
     }
