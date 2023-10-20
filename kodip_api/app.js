@@ -4,7 +4,7 @@ const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const mongoose = require('mongoose');
-
+ 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -12,7 +12,7 @@ const io = socketIO(server, {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
   },
-});
+}); 
 
 const port = 3002;
 
@@ -81,8 +81,8 @@ app.get('/', (req, res) => {
 });
 
 
-/*
-const uri = "";
+
+const uri = "mongodb+srv://stewie-gil:777Stephen!@cluster0.ez5jfzu.mongodb.net/";
 
 const connectDB = async () => {
   try {
@@ -100,7 +100,9 @@ connectDB().then(() => {
     console.log(`API is running on port ${port}`);
   });
 });
-*/
+
+/*
 server.listen(port, () => {
   console.log(`API is running on port ${port}`);
 });
+*/
