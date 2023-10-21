@@ -77,12 +77,12 @@ io.on('connection', (socket) => {
 });  
 
 app.get('/', (req, res) => {
-  res.send('hello');
+  res.send('Hello 🙂, welcome to the Kodip API!');
 });
 
 
 
-const uri = "mongodb+srv://stewie-gil:777Stephen!@cluster0.ez5jfzu.mongodb.net/";
+const uri = "mongodb+srv://stewie-gil:####@cluster0.ez5jfzu.mongodb.net/";
 
 const connectDB = async () => {
   try {
