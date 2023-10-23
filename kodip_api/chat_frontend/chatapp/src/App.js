@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import './cssfile.css';
+import Header from './components/header';
 //import user from '../../../models/userModel';
+import LoginForm from './components/loginForm';
+
+
+
 
 const serverURL = 'http://localhost:3002';
 
@@ -32,11 +37,7 @@ function ChatComponent() {
     });
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setUsers([...users, userName]);
-    socket.emit('user login', userName);
-  };
+
 
   // Handle receiving private messages from the server
  
@@ -84,11 +85,40 @@ function ChatComponent() {
     }
   };
 
+  //setUserName
+  //setEmail
+  //setPassword
+
+const details = (mail, pass, username1) => {  
+    setEmail(mail);
+    setPassword(pass);
+    //lets now get user's username from db!! and associate a message/something with them.
+    
+    setUserName(username1);
+    
+   
+    //when we get a user we check db for name, we update our list
+    console.log('heereere email',username1, userName);
+    setUsers([...users, userName]);
+    socket.emit('user login', userName);
+
+  }
+
+  
+  
+
   return (
+    <div> map
     <div className="parent-container">
+
+
       <div className="contacts">
         <div className="login">
-          <h1>Login</h1>
+          <div>
+          <LoginForm getUser={details}/> 
+        </div>
+        {/*
+                  
           <form onSubmit={handleSubmit}>
 
           <label>
@@ -127,9 +157,13 @@ function ChatComponent() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+
+              
             </label>
+           
             <button type="submit">Login</button>
           </form>
+ */}
 
           <h1>Contacts</h1>
         <ul id="contact-list">
@@ -182,6 +216,7 @@ function ChatComponent() {
           <button onClick={sendMessage}>Send</button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

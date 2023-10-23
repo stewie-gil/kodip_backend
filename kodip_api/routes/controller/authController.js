@@ -4,26 +4,19 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Blacklist = require('../../models/blacklisted');
 
+ 
+
+
 class authController {
   async register(req, res) {
     const { username, password, email, UserType } = req.body;
-
-    // Check whether email exists, return an error if it does
-    // Check the username if it only contains letters
-    // Check the password if it is secure
-
-    // Hashing password
-
-    //console.log('password: ', password)
    
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
       // Create a new user document with the provided data
       const newUser = new User({
         username,
-        password: hashedPassword,
+        password,
         email,
         UserType: UserType, // Set the UserType field
       });
@@ -48,14 +41,11 @@ class authController {
 
       console.log(' login password: ', password)
       console.log('user.password', user.password)
+      console.log('user.name', user.username)
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      
 
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
-      }
-
-      // Creating an auth session for the user with jwt
+            // Creating an auth session for the user with jwt
       const payload = { 
         user: {
           id: user.id,
@@ -68,7 +58,7 @@ class authController {
 
       console.log('Generated token: ', token);
 
-      res.status(200).json({ token });
+      res.status(200).json({ 'token': token, 'username': user.username });
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server Error');

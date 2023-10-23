@@ -77,17 +77,18 @@ io.on('connection', (socket) => {
 });  
 
 app.get('/', (req, res) => {
-  res.send('Hello 🙂, welcome to the Kodip API!');
+  res.sendFile(__dirname + '/welcome.html');
 });
 
 
 
-const uri = "mongodb+srv://stewie-gil:####@cluster0.ez5jfzu.mongodb.net/";
+const uri = "mongodb+srv://stewie-gil:###@cluster0.ez5jfzu.mongodb.net/";
 
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(uri);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    //console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected!`);
   } catch (error) {
     console.log(error.message);
     process.exit(1);

@@ -1,0 +1,76 @@
+/* postDatacss.module.css */
+
+.createlisting {
+    margin-top: 6px;
+    color: rgb(0, 3, 12);
+    background-color: #a3d7f5;
+    border: none;
+    padding: 10px 20px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 15px rgba(17, 152, 194, 0.5);
+  }
+  
+  .createlisting:hover {
+    background-color: #a3f5da;
+    transform: scale(1.05);
+  }
+  
+  .createlisting:focus {
+    outline: none;
+  }
+  
+  .createlisting:active {
+    transform: scale(0.95);
+  }
+  
+  .Modalpop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 15px rgba(17, 152, 194, 0.5);
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .text {
+    font-weight: bold;
+  }
+  
+  .inputfield {
+    padding: 10px;
+    border: 1px solid #cadddc;
+    border-radius: 5px;
+    box-shadow: 0 2px 15px rgba(143, 157, 161, 0.5);
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .submit {
+    padding: 10px;
+    background-color: #48bef53d;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 15px rgba(17, 152, 194, 0.5);
+  }
+  
+  .submit:hover {
+    background-color: #80acee;
+    transform: scale(1.05);
+  }
