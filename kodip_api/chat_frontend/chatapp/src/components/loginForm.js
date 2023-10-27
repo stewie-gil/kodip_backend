@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
-import { useRef } from 'react';
+
 import styles from './loginform.module.css';
 import axios from 'axios';
 
@@ -55,7 +55,7 @@ function LoginForm(prop) {
       
       
 
-    // send email to API to create a users jwt token
+    // send request to API to create a users jwt token 
     const loginData ={
       email: email,
       password: 'not set',
@@ -70,6 +70,7 @@ function LoginForm(prop) {
      
       setUserName(username)
       // will check if token is invalid later etc...
+      console.log('username after axios post:', username);
       prop.getUser(email, password, username);
       })
       .catch((error)=>{

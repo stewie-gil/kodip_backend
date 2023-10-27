@@ -5,7 +5,7 @@ import Header from './components/header';
 //import user from '../../../models/userModel';
 import LoginForm from './components/loginForm';
 
-
+import axios from 'axios';
 
 
 const serverURL = 'http://localhost:3002';
@@ -17,11 +17,12 @@ function ChatComponent() {
   const [newMessage, setNewMessage] = useState('');
   const [userName, setUserName] = useState('');
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] =useState('');
   const [sentMessage, setSentMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
 
 
 
@@ -33,6 +34,7 @@ function ChatComponent() {
     });
 
     socket.on('online users', (users) => {
+      console.log("online users received", users);
       setOnlineUsers(users);
     });
   }, []);
@@ -42,7 +44,7 @@ function ChatComponent() {
   // Handle receiving private messages from the server
  
   useEffect(() => {
-    socket.on('A private message', ({ from, message }) => {
+    socket.on('A private message', ({ from, message, email}) => {
       const newReceivedMessage = {
         from,
         message,
@@ -51,7 +53,7 @@ function ChatComponent() {
      
       //console.log('message counter', messageCounter);
       setMessages((prevMessages) => [...prevMessages, newReceivedMessage]);
-      console.log('message recieved', message);
+      console.log('message received', message);
     });
   }, []);
 
@@ -66,28 +68,77 @@ function ChatComponent() {
      
       //console.log('message counter', messageCounter);
       setMessages((prevMessages) => [...prevMessages, newReceivedMessage]);
-      console.log('message recieved', message);
+      console.log('message received', message);
     });
   }, []);
 
   
   const sendMessage = () => {
+   
+
     if (selectedUser) {
       socket.emit('private message', {
         to: selectedUser,
         message: newMessage,
         from: userName,
+        email: email,
 
       });
-      
+     
       setSentMessage(newMessage);
       setNewMessage('');
     }
+ //look for the selected user in mongodb users database by querying the api.
+const sender = email;
+const receiver = selectedUser.useremail;
+const reqdata = {
+  sender,
+  receiver,
+}
+console.log('req', reqdata);
+
+async function mes(){
+try {
+const response = await axios.post('http://localhost:3002/api/auth/getusers', reqdata)
+
+const {senderID, receiverID} = response.data;
+console.log("senders id and receirs id", response.data)
+
+const messdata = {
+  senderid: senderID,
+  receiverid: receiverID,
+  message: newMessage,
+  }
+console.log('messdata bf .then', messdata)
+//match with their id and then create your axios post
+return messdata;
+//now we will have the senders id and the receiversid . we now create a post to the messagecontroller asking it to save the message obj to database
+
+}catch(error){
+  console.log('send message error', error);
+}
+
+  }
+
+  mes(reqdata)
+  .then((messdata)=> {
+    console.log('what we are sending', messdata)
+      const messresponse = axios.post('http://localhost:3002/api/auth/sendmessage', messdata)
+      console.log('send message response', messresponse)
+
+  })
+  .catch((error) => {
+    console.log('messdata error', error)
+  })
+
+
+
+
+
+
   };
 
-  //setUserName
-  //setEmail
-  //setPassword
+
 
 const details = (mail, pass, username1) => {  
     setEmail(mail);
@@ -96,16 +147,69 @@ const details = (mail, pass, username1) => {
     
     setUserName(username1);
     
-   
+   const userobj ={
+    useremail: mail,
+    userpassword: pass,
+    userusername:username1,
+   }
     //when we get a user we check db for name, we update our list
-    console.log('heereere email',username1, userName);
-    setUsers([...users, userName]);
-    socket.emit('user login', userName);
+    
+    setUsers([...users, userobj]);
+    socket.emit('user login', userobj);
+    console.log(userobj);
 
+
+    //if (mail, pass, username1)
+
+    
   }
 
-  
-  
+
+  async function getchathistory(email, emailselect){
+const emaildata = {
+  sender: email,
+  receiver: emailselect,
+}
+console.log('what we are sending to getusers', emaildata)
+//expected  res.json({senderID : senderid._id, receiverID: receiverid._id});
+axios.post('http://localhost:3002/api/auth/getusers', emaildata)
+.then((response) => {
+
+
+//we take the ids and then ask for their chats with chathistory api endpoint
+///chathistory'
+axios.post('http://localhost:3002/api/auth/chathistory', response.data)
+.then((resp) => {
+console.log("chathistory success:", resp.data.messages);
+setChatHistory(resp);
+//once we have the response from the api we sort the messages and place them in an array
+let messagesArray = resp.data.messages
+
+let hist = []
+for(let i = 0; i < messagesArray.length; i++){
+
+ hist.push(messagesArray[i].content);
+
+ 
+}
+console.log(hist);
+setChatHistory(hist)
+
+
+})
+.catch ((error) => {
+console.log('chathistory api endpiont error', error);
+})
+
+
+// once we have the id we do load cht history
+//getusers  /chathistory
+
+  })
+  .catch((error) => {
+    console.log('error gettting users:', error);
+  })
+}  
 
   return (
     <div> map
@@ -168,12 +272,21 @@ const details = (mail, pass, username1) => {
           <h1>Contacts</h1>
         <ul id="contact-list">
           {onlineUsers.map((user) => (
-            <li key={user}>
+            <li key={user.email}>
+              
               <h2
-                onClick={() => setSelectedUser(user)}
-                className={selectedUser === user ? 'active-contact' : ''}
+
+                onClick={() => {
+                  setChatHistory('');
+                  setSelectedUser(user);
+                  getchathistory(email, user.useremail);
+                 
+                }}
+                className={selectedUser.userusername === '' ? 'active-contact' : ''}
               >
-                {user}
+                {user.userusername}
+               
+                
               </h2>
             </li>
           ))}
@@ -185,28 +298,40 @@ const details = (mail, pass, username1) => {
 
       <div className="chat-container">
         <div className="chat-messages">
-          <h2>Sending a message to {selectedUser || 'None'}</h2>
+          {selectedUser.userusername? (
+            <h2>Sending a message to {selectedUser.userusername || 'None'}</h2>
+          ) : null  }
+
+
+<div>
+  {chatHistory.length > 0 && (
+    <div>
+      {(() => {
+        const chatElements = [];
+        for (let i = 0; i < chatHistory.length; i++) {
+          chatElements.push(<p key={i}>{chatHistory[i]}</p>);
+        }
+        return chatElements;
+      })()}
+    </div>
+  )}
+</div>
+
 
           {messages.map((message, index) => (
             <div key={index} className="message">
 
+               
               <p>
               <strong>{message.from || 'You'}: </strong>{message.message}
              
-              
-
-
-
               </p>
              
-
-
-
             </div>
             
           ))}
         </div>
-        <div className="chat-input">
+        <div className="chat-input"> 
           <input
             type="text"
             value={newMessage}

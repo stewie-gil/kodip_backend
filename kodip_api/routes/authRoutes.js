@@ -24,12 +24,17 @@ router.get('/properties', propertyController.get);
 //logout
 router.post('/logout', verifyToken , authController.logout);
 
+//get all users from the database
+router.post('/getusers', authController.getusers);
+
+
 //message app
 //router.get('/messageapp', messageController.messageapp);
 
-//get messages
-//router.get('/chathistory', messageController.chatHistory);
+//get chat history/ all messages
+router.post('/chathistory', messageController.loadChatHistory);
 
+//send a message to db
 router.post('/sendmessage', messageController.sendMessage);
 
 module.exports = router;

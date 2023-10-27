@@ -42,20 +42,24 @@ io.on('connection', (socket) => {
     console.log('A user disconnected');
   });
 
-  socket.on('user login', (username) => {
-    console.log('Someone logged in: ', username);
-    users.push({ socket, username });
-    io.emit('online users', users.map((user) => user.username));
+  socket.on('user login', (userobj) => {
+    
+    console.log('Someone logged in: ', userobj.userusername);
+    users.push({ socket, userobj });
+    
+    io.emit('online users', users.map((user) => user.userobj));
+    //console.log('after user push', users)
   });
+ 
   
-  
-  socket.on('private message', ({ to, message, from }) => {
-    const recipientUser = users.find((user) => user.username === to);
-    const senderUser = users.find((user) => user.username === from);
-  
+  socket.on('private message', ({ to, message, from, email }) => {
+    console.log("users who are online ", users)
+    const recipientUser = users.find((user) => user.userobj.userusername === to.userusername);
+    const senderUser = users.find((user) => user.userobj.userusername === from);
+  console.log(`recipientUser: ${recipientUser}, users: ${users} to: ${to}`)
     if (recipientUser) {
       const recipientSocket = recipientUser.socket;
-      recipientSocket.emit('A private message', { from, message }); // Send the message to the recipient
+      recipientSocket.emit('A private message', { from, message, email }); // Send the message to the recipient
       console.log('Sending a private message:', from, 'to', to, message);
       
 
@@ -65,7 +69,7 @@ io.on('connection', (socket) => {
   
     if (senderUser) {
       const senderSocket = senderUser.socket;
-      senderSocket.emit('A private message', { to, message }); // Send a confirmation message to the sender
+      senderSocket.emit('A private message', { to, message, email }); // Send a confirmation message to the sender
       console.log('Sent a confirmation message to:', from);
     } else {
       console.log(`Sender user '${from}' not found.`);
@@ -81,8 +85,8 @@ app.get('/', (req, res) => {
 });
 
 
-
-const uri = "mongodb+srv://stewie-gil:###@cluster0.ez5jfzu.mongodb.net/";
+ 
+const uri = "mongodb+srv://stewie-gil:####@cluster0.ez5jfzu.mongodb.net/";
 
 const connectDB = async () => {
   try {
@@ -90,7 +94,7 @@ const connectDB = async () => {
     //console.log(`MongoDB Connected: ${conn.connection.host}`);
     console.log(`MongoDB Connected!`);
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     process.exit(1);
   }
 };

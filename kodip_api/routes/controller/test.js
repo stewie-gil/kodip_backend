@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+/*
 //register
 const reigsterdata = {
     username: 'some_user',
@@ -17,15 +17,12 @@ console.log(response.data)
 .catch((error)=>{
     console.error('register fail:', error)
 })
+*/const messdata = {sender: '6536cc58d0f01b6d8c424ad6', receiver: '6536cc58d0f01b6d8c424ad6'}
 
 //login
-const loginData ={
-  email: 'john_doe10@example.com',
-  password: 'your_passsowrd',
-  
-  };
 
-  axios.post('http://localhost:3002/api/auth/login', loginData)
+
+  axios.post('http://localhost:3002/api/auth/chathistory', messdata)
   .then((response) =>{
   console.log('Login successful')
   console.log(response.data)
@@ -35,7 +32,7 @@ const loginData ={
       console.error('login fail:', error)
   })
 
-
+/*
   // logout
   const apiUrl = 'http://localhost:3002/api/auth/logout'; 
 const jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUzMWVkYzg4YjlmYTg2YWQ5NDQyNDliIiwiZW1haWwiOiJqb2huX2RvZTEwQGV4YW1wbGUuY29tIn0sImlhdCI6MTY5Nzc3MTAyNywiZXhwIjoxNjk3Nzc0NjI3fQ.V4XIarkjueKTkxRCU-w1s9NUvpaD1SJB1sRHHSX_hA4'
@@ -81,3 +78,4 @@ axios
   .catch((error) => {
     console.error('Error:', error);
   });
+*/
