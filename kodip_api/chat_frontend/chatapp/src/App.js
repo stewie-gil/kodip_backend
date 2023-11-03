@@ -1,12 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
-import './cssfile.css';
+//import './cssfile.css';
 import Header from './components/header';
 //import user from '../../../models/userModel';
 import LoginForm from './components/loginForm';
+import MapComponent from './components/mapfile';
 
 import axios from 'axios';
-
+import SearchBox from './SearchBox';
+import './chatapp.css';
+import Sidebar from './components/sidebar';
+//import './components/Sidebar.css';
+//import './components/loginmodal.css'
 
 const serverURL = 'http://localhost:3002';
 
@@ -16,6 +21,7 @@ function ChatComponent() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [userName, setUserName] = useState('');
+
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -23,6 +29,19 @@ function ChatComponent() {
   const [password, setPassword] =useState('');
   const [sentMessage, setSentMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
+
+  const [isMessageModalOpen, setMessageModalOpen] = useState(false);
+  
+
+  const openMessageModal = () => {
+    if (isMessageModalOpen){
+      setMessageModalOpen(false);
+    } else{
+      setMessageModalOpen(true);
+    }
+    
+  };
+
 
 
 
@@ -211,139 +230,139 @@ console.log('chathistory api endpiont error', error);
   })
 }  
 
-  return (
-    <div> map
-    <div className="parent-container">
 
 
-      <div className="contacts">
-        <div className="login">
-          <div>
-          <LoginForm getUser={details}/> 
+
+
+
+
+
+
+
+return (
+  <div className="Entirepage">
+
+<div style={{position:'relative', left:'100px'}}>    <LoginForm getUser={details} />
         </div>
-        {/*
-                  
-          <form onSubmit={handleSubmit}>
 
-          <label>
-            <p>
-            User Name:
-            </p>
-              
-              <input
-                
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              <p>
-              Email:
-              </p>
-              
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </label>
+    <div className="sidebar">   
+   
+    
+
+    <div> 
+      <button className="message-button" onClick={openMessageModal}>
+        Messages
+      </button>
+    
+      {isMessageModalOpen && (
+        <>
+         
+
+          <div className="message-app">
             
-            <label>
-              <p>
-              Password:
-              </p>
-              
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-
-              
-            </label>
-           
-            <button type="submit">Login</button>
-          </form>
- */}
-
-          <h1>Contacts</h1>
-        <ul id="contact-list">
-          {onlineUsers.map((user) => (
-            <li key={user.email}>
-              
-              <h2
-
-                onClick={() => {
-                  setChatHistory('');
-                  setSelectedUser(user);
-                  getchathistory(email, user.useremail);
-                 
-                }}
-                className={selectedUser.userusername === '' ? 'active-contact' : ''}
-              >
-                {user.userusername}
-               
+            
+            
+            <div className="contacts">
+              <div>
                 
-              </h2>
-            </li>
-          ))}
-        </ul>
-        </div>
-      
-      </div>
-
-
-      <div className="chat-container">
-        <div className="chat-messages">
-          {selectedUser.userusername? (
-            <h2>Sending a message to {selectedUser.userusername || 'None'}</h2>
-          ) : null  }
-
-
-<div>
-  {chatHistory.length > 0 && (
-    <div>
-      {(() => {
-        const chatElements = [];
-        for (let i = 0; i < chatHistory.length; i++) {
-          chatElements.push(<p key={i}>{chatHistory[i]}</p>);
-        }
-        return chatElements;
-      })()}
-    </div>
-  )}
-</div>
-
-
-          {messages.map((message, index) => (
-            <div key={index} className="message">
-
-               
-              <p>
-              <strong>{message.from || 'You'}: </strong>{message.message}
-             
-              </p>
-             
+                <h1>Contacts</h1>
+                <ul id="contact-list">
+                  {onlineUsers.map((user) => (
+                    <li key={user.email}>
+                      <h2
+                        onClick={() => {
+                          setChatHistory('');
+                          setSelectedUser(user);
+                          getchathistory(email, user.useremail);
+                        }}
+                        className={selectedUser.userusername === '' ? 'active-contact' : ''}
+                      >
+                        {user.userusername}
+                      </h2>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            
-          ))}
-        </div>
-        <div className="chat-input"> 
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
-      </div>
+
+
+
+            <div className="chat-container">
+              <div className="chat-messages">
+                {selectedUser.userusername ? (
+                  <h2>Sending a message to {selectedUser.userusername || 'None'}</h2>
+                ) : null}
+
+                <div>
+                  {chatHistory.length > 0 && (
+                    <div>
+                      {(() => {
+                        const chatElements = [];
+                        for (let i = 0; i < chatHistory.length; i++) {
+                          chatElements.push(<p key={i}>{chatHistory[i]}</p>);
+                        }
+                        return chatElements;
+                      })()}
+                    </div>
+                  )}
+                </div>
+
+                {messages.map((message, index) => (
+                  <div key={index} className="message">
+                    <p>
+                      <strong>{message.from || 'You'}: </strong>
+                      {message.message}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div >
+                <input
+                className="chat-input"
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type your message..."
+                />
+                <button className="send-button" onClick={sendMessage}>Send</button>
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+        </>
+      )}
+
+
+
     </div>
     </div>
-  );
+
+    <div className="Map">
+      <MapComponent />
+
+    
+    </div>
+
+    <div className="search-bar">
+      <SearchBox />
+
+      
+    
+    </div>
+
+
+    
+  </div>
+);
+
+
+
+
+
 }
 
 export default ChatComponent;

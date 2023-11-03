@@ -3,8 +3,9 @@ import Modal from 'react-modal';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
 
-import styles from './loginform.module.css';
+//import styles from './loginform.module.css';
 import axios from 'axios';
+import "../chatapp.css";
 
 
 const firebaseConfig = {
@@ -154,27 +155,27 @@ const toggleDropdownFalse = () =>
 }
 
   return (
-    <div>
+    <div >
       {!isLoggedIn && (
-        <button onClick={handleClick} className={styles.text}>Login</button>
+        <button onClick={handleClick} className="button1">Login</button>
       )}
       {
         isLoggedIn && (
 
                 <div>
           {/* Dropdown Menu */}
-          <div className={styles.dropdownContainer}>
-            {!showDropdown && <button onClick={toggleDropdownTrue} className={styles.text} style={{fontSize: '18px'}}>
+          <div className="dropdownContainer">
+            {!showDropdown && <button onClick={toggleDropdownTrue} className="text" style={{fontSize: '18px'}}>
               Welcome 😊!
             </button>}
 
-            {showDropdown && <button onClick={toggleDropdownFalse} className={styles.text} style={{fontSize: '18px'}}>
+            {showDropdown && <button onClick={toggleDropdownFalse} className="text" style={{fontSize: '18px'}}>
               Welcome 😊!
             </button>}
 
             {showDropdown && (
-              <div className={styles.dropdownMenu}>
-                <button onClick={handleLogout} className={styles.text} style={{fontSize: '12px'}}>
+              <div className="dropdownMenu">
+                <button onClick={handleLogout} className="text" style={{fontSize: '12px'}}>
                   Logout?
                 </button>
               </div>
@@ -186,76 +187,79 @@ const toggleDropdownFalse = () =>
 
         )
       }
+    
       <Modal
         isOpen={modalOpen}
         onRequestClose={handleClose}
-        className={styles.modal}
+        className="modal"
+       
       >
         {!displayName && (
-          <form onSubmit={handleLogin} className={styles.form}>
+          <form onSubmit={handleLogin} className="form">
           <p style = {{fontWeight: 'bold'}}> Welcome back! Login with your details below 😊! </p>
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
+              className="input"
             />
             <input
               type="password"
               placeholder="Password"
-              value={password}
+              value={password} 
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
+              className="input"
             />
-            <button type="submit" className={styles.button} onClick = {toggleDropdownFalse}>Log in</button>
-            <button onClick={() => setDisplayName(true)} className={styles.button}>Sign Up</button>
+            <button type="submit" className="button" onClick = {toggleDropdownFalse}>Log in</button>
+            <button onClick={() => setDisplayName(true)} className="button">Sign Up</button>
           {loginerror && (
-  <p style={{ color: '#ff6b6b', fontStyle: 'italic', fontWeight: 'bold', padding : '0 px', margin: '4px 0' }}>{loginerror}</p>
-)}
+          <p style={{ color: '#ff6b6b', fontStyle: 'italic', fontWeight: 'bold', padding : '0 px', margin: '50px 0' }}>{loginerror}</p>
+          )}
 
           </form>
         )}
         {displayName && (
-          <form onSubmit={handleSignUp} className={styles.form}>
+          <form onSubmit={handleSignUp} className="form">
           <p style = {{fontWeight : 'bold'}}> New to Kodip? Sign up today 😊! </p>
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
+              className="input"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
+              className="input"
             />
             <input
               type="text"
               placeholder="How should we call you?"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={styles.input}
+              className="input"
             />
 
 
-            <button type="submit" className={styles.button} style = {{padding : '0 px', margin : '4px 0'}}>Sign up</button>
+            <button type="submit" className="button" style = {{padding : '0 px', margin : '4px 0'}}>Sign up</button>
 
             <p style = {{padding : '0 px', margin: '4px 0'}}> Or </p>
 
-            <button onClick={() => setDisplayName(false)} className={styles.button} style = {{padding : '0 px', margin : '0 px'}}>Login</button>
+            <button onClick={() => setDisplayName(false)} className="button" style = {{padding : '0 px', margin : '0 px'}}>Login</button>
             {loginerror && (
-  <p style={{ color: '#ff6b6b', fontStyle: 'italic', fontWeight: 'bold', padding : '0 px', margin: '4px 0' }}>{loginerror}</p>
-)}
+            <p style={{ color: '#ff6b6b', fontStyle: 'italic', fontWeight: 'bold', padding : '0 px', margin: '4px 0' }}>{loginerror}</p>
+              )}
 
 
 
           </form>
         )}
-      </Modal>
+            </Modal>
+      
     </div>
   );
 }
