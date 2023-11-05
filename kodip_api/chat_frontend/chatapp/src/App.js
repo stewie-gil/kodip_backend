@@ -31,6 +31,7 @@ function ChatComponent() {
   const [chatHistory, setChatHistory] = useState([]);
 
   const [isMessageModalOpen, setMessageModalOpen] = useState(false);
+  const [userfrompin ,SetUserFromPin] = useState([])
   
 
   const openMessageModal = () => {
@@ -109,7 +110,7 @@ function ChatComponent() {
     }
  //look for the selected user in mongodb users database by querying the api.
 const sender = email;
-const receiver = selectedUser.useremail;
+const receiver = selectedUser.useremail || selectedUser.email;
 const reqdata = {
   sender,
   receiver,
@@ -151,11 +152,38 @@ return messdata;
   })
 
 
+  
+ };
 
 
+//handling when a user clicks
+  function selectingUser (user, email) {
+    setChatHistory('');
+    SetUserFromPin(user.data.userobj);
+    
+    console.log("selecting user how many times called? ", user.data.userobj);
+  }
 
 
-  };
+//takes in a bool : true or false for opening or closing message modal and a users email
+const messmodalfunction = async (bool, usersemail) =>{
+  console.log('what is usersemail', usersemail, bool);
+  setMessageModalOpen(bool)
+  const emaill = usersemail
+const user = await axios.post('http://localhost:3002/api/auth/usersobj', {usersemail: emaill})
+
+  setSelectedUser(user.data.userobj)
+ 
+//we need to use the usersemail to identify the user object and call the onclick function while passing it
+//so that we simulate when a user selects a particular user
+
+//
+selectingUser(user, email);
+console.log('how many time is messmodalfunction getting called/running', user.data.userobj, email);
+
+}
+
+
 
 
 
@@ -163,7 +191,7 @@ const details = (mail, pass, username1) => {
     setEmail(mail);
     setPassword(pass);
     //lets now get user's username from db!! and associate a message/something with them.
-    
+    console.log("how many times after login?")
     setUserName(username1);
     
    const userobj ={
@@ -183,52 +211,45 @@ const details = (mail, pass, username1) => {
     
   }
 
-
-  async function getchathistory(email, emailselect){
-const emaildata = {
-  sender: email,
-  receiver: emailselect,
-}
-console.log('what we are sending to getusers', emaildata)
 //expected  res.json({senderID : senderid._id, receiverID: receiverid._id});
-axios.post('http://localhost:3002/api/auth/getusers', emaildata)
-.then((response) => {
+//getchathistory takes in a senders email and a recievers email and returns the chat history of the two
+async function getchathistory(email, emailselect) {
+  try {
+    const emaildata = {
+      sender: email,
+      receiver: emailselect,
+    };
+    console.log('what we are sending to getusers', emaildata);
 
+    const response = await axios.post('http://localhost:3002/api/auth/getusers', emaildata);
+    const { senderID, receiverID } = response.data;
+    console.log("senders id and receivers id", response.data);
 
-//we take the ids and then ask for their chats with chathistory api endpoint
-///chathistory'
-axios.post('http://localhost:3002/api/auth/chathistory', response.data)
-.then((resp) => {
-console.log("chathistory success:", resp.data.messages);
-setChatHistory(resp);
-//once we have the response from the api we sort the messages and place them in an array
-let messagesArray = resp.data.messages
+    const messdata = {
+      senderid: senderID,
+      receiverid: receiverID,
+      message: newMessage,
+    };
+    console.log('messdata before .then', messdata);
 
-let hist = []
-for(let i = 0; i < messagesArray.length; i++){
+    const resp = await axios.post('http://localhost:3002/api/auth/chathistory', response.data);
+    console.log("chathistory success:", resp.data.messages);
 
- hist.push(messagesArray[i].content);
+    // Handle the received data and set the state here
+    let messagesArray = resp.data.messages;
+    let hist = [];
 
- 
+    for (let i = 0; i < messagesArray.length; i++) {
+      hist.push(messagesArray[i].content);
+    }
+
+    console.log(hist);
+    setChatHistory(hist);
+  } catch (error) {
+    console.error('Error in getchathistory:', error);
+  }
 }
-console.log(hist);
-setChatHistory(hist)
 
-
-})
-.catch ((error) => {
-console.log('chathistory api endpiont error', error);
-})
-
-
-// once we have the id we do load cht history
-//getusers  /chathistory
-
-  })
-  .catch((error) => {
-    console.log('error gettting users:', error);
-  })
-}  
 
 
 
@@ -242,7 +263,7 @@ console.log('chathistory api endpiont error', error);
 return (
   <div className="Entirepage">
 
-<div style={{position:'relative', left:'100px'}}>    <LoginForm getUser={details} />
+<div style={{position:'absolute', right:'70px'}}>    <LoginForm getUser={details} />
         </div>
 
     <div className="sidebar">   
@@ -250,7 +271,7 @@ return (
     
 
     <div> 
-      <button className="message-button" onClick={openMessageModal}>
+      <button className="message-button" onClick={openMessageModal} style={{backgroundColor: '#a3d7f5', color: 'black' }}>
         Messages
       </button>
     
@@ -265,20 +286,31 @@ return (
             <div className="contacts">
               <div>
                 
-                <h1>Contacts</h1>
+                <h3 
+                style={{  
+                backgroundColor: 'rgba(163, 215, 245, 0.292)', padding:'10px',
+                width:'100%'
+                }}>
+                  
+                  Contacts</h3>
                 <ul id="contact-list">
                   {onlineUsers.map((user) => (
                     <li key={user.email}>
-                      <h2
+
+                      <h4
                         onClick={() => {
-                          setChatHistory('');
-                          setSelectedUser(user);
-                          getchathistory(email, user.useremail);
+                          setSelectedUser(userfrompin);
+                          
+                          //getchat history requires two emails, sender and reciever to load chat history
+                          getchathistory(email, selectedUser.email);
+                          console.log('who have we selected', selectedUser.email, email)
                         }}
                         className={selectedUser.userusername === '' ? 'active-contact' : ''}
                       >
-                        {user.userusername}
-                      </h2>
+                        { console.log("userfrom pin", userfrompin.username)}
+                        <h4>{user.userusername}</h4>
+                        <h4>{userfrompin.username}</h4>
+                      </h4>
                     </li>
                   ))}
                 </ul>
@@ -289,17 +321,24 @@ return (
 
             <div className="chat-container">
               <div className="chat-messages">
-                {selectedUser.userusername ? (
-                  <h2>Sending a message to {selectedUser.userusername || 'None'}</h2>
+                {selectedUser.userusername || selectedUser.username  ? (
+                  <h3 style={{  
+                    backgroundColor: 'rgb(232 239 243 / 67%)', padding:'10px',
+                    width:'80%'
+                    }}
+                  
+                  
+                  >Sending a message to {selectedUser.userusername || selectedUser.username ||'None'}</h3>
                 ) : null}
 
-                <div>
+                <div class='chatdiv' style={{paddingLeft:'20px', overflow:'auto'}}>
                   {chatHistory.length > 0 && (
-                    <div>
+                    <div >
                       {(() => {
                         const chatElements = [];
+
                         for (let i = 0; i < chatHistory.length; i++) {
-                          chatElements.push(<p key={i}>{chatHistory[i]}</p>);
+                          chatElements.push(<p className='chat-text' key={i}>{chatHistory[i]}</p>);
                         }
                         return chatElements;
                       })()}
@@ -342,12 +381,12 @@ return (
     </div>
 
     <div className="Map">
-      <MapComponent />
+      <MapComponent setmessagemodal={messmodalfunction} />
 
     
     </div>
 
-    <div className="search-bar">
+    <div className="search-bar" >
       <SearchBox />
 
       

@@ -1,4 +1,5 @@
 import React from 'react';
+//import './modalcss';
 
 function Modal({ title, content, onClose }) {
   return (

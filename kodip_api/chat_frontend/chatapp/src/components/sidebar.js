@@ -22,7 +22,7 @@ function Sidebar() {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" style={{backgroundColor: 'black'}}>
       <button className="message-button" onClick={openMessageModal}>
         Message
       </button>

@@ -99,6 +99,23 @@ let receiverid = await User.findOne({ email: receiver });
     console.log(error)
   } 
 
+
+
+}
+
+
+//get users object. takes in email returns a users obj
+async usersobj(req, res){
+const {usersemail} = req.body;
+try{
+  let userobj = await User.findOne({email: usersemail});
+
+  res.json({userobj});
+  console.log('userobj', userobj)
+
+} catch(error){
+  res.json({Error : error})
+}
 }
 
 
@@ -123,6 +140,88 @@ async logout(req, res){
   
   res.json({message: 'Logged out:', user: req.user});
 }
+
+
+
+
+
+
+
+async postdata (req, res) {
+  
+
+
+// Define a filter to uniquely identify the document you want to update
+const filter = { username: 'user6' }; // Replace 'username' and 'user7' with your filter criteria
+
+// Define the data you want to set in the 'listing' field
+const { listing, pushpin1} = req.body
+const listingData = {
+  propertyType: 'Apartment',
+  price: 4999,
+  description: 'Luxury apartment with stunning city views',
+  propertyName: 'Lux Apartmentz',
+  location: 'Nakuru, Kenya',
+};
+
+
+const pushpin = {
+  location: [-1.3217, 36.6764], // Latitude and longitude
+  infoboxOption: {
+    title: 'Karen',
+    description: 'Karen Ridge',
+  },
+}
+// Use Mongoose's updateOne method to add the 'listing' field to the document
+
+const updateQuery = User.updateOne(filter, { pushpin: pushpin });
+
+// Execute the query using the `exec()` method
+updateQuery.exec()
+  .then((result) => {
+    console.log('Document updated:', result);
+    res.json({message: 'updated'})
+  })
+  .catch((err) => {
+    console.error('Update failed:', err);
+    res.json({message: err})
+  });
+
+//console.log(response)
+//res.json({message:response})
+
+
+}
+
+
+
+
+
+//get all users users from db
+async userswithpin(req, res){
+  //console.log('triggererd');
+  //sender reciever will have to be email addresses
+  //console.log('entire req', req)
+  //const {sender, receiver} = req.body;
+//console.log('sender and reciever', sender, reciever)
+  try{
+  const users = await User.find({ pushpin: { $exists: true }});
+
+  res.json({users: users});
+  //console.log('users', users)
+
+  }catch(error){
+    //console.log('users', users)
+    //console.log(error)
+  } 
+
+
+
+}
+
+
+
+
 
 }
  

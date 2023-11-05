@@ -37,4 +37,7 @@ router.post('/chathistory', messageController.loadChatHistory);
 //send a message to db
 router.post('/sendmessage', messageController.sendMessage);
 
+router.post('/postdata', authController.postdata);
+router.post('/userswithpin', authController.userswithpin);
+router.post('/usersobj', authController.usersobj);
 module.exports = router;

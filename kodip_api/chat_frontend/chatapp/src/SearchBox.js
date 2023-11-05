@@ -13,7 +13,7 @@ function SearchBox({ searchQuery, setSearchQuery, handleSearch }) {
   };
 
   return (
-    <div className="search-container">
+    <div className="search-container"  >
 
       <div className='search'>
       <form onSubmit={handleSubmit}>
@@ -21,11 +21,16 @@ function SearchBox({ searchQuery, setSearchQuery, handleSearch }) {
         <div className="search-buttons">
           <input
           type="text"
-          placeholder="Search..."
-          className="search-buttons"
+          placeholder="  🔍   Search... "
+          className="inputfield"
           value={searchQuery}
           onChange={handleInputChange}
-        /> <button onClick={() => handleSearch('Studio Apartments')}>Studio Apartments</button>
+          
+
+        /> 
+        
+        
+        <button onClick={() => handleSearch('Studio Apartments')}>Studio Apartments</button>
          
           <button onClick={() => handleSearch('1 Bedroom')}>1 Bedroom</button>
           <button onClick={() => handleSearch('2 Bedroom')}>2 Bedroom</button>
